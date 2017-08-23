@@ -14,6 +14,7 @@ method.init = function() {
   this.name = 'FIXPRICE';
 
   this.currentTrend;
+  this.requiredHistory = 0; 
 
   log.debug('New FIXPRICE', settings);
 }
