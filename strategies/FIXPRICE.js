@@ -32,10 +32,10 @@ method.log = function() {
 method.check = function(candle) { 
   var price = candle.close;
 
-  var message = '@ ' + price.toFixed(8) + ' (long:' + settings.long.toFixed(5) + 'short: '+ settings.short.toFixed(5) +')';
+  var message = '@ ' + price.toFixed(5) + ' (long:' + settings.long.toFixed(5) + ' short: '+ settings.short.toFixed(5) +')';
 
   if(price <= settings.long) {
-    log.debug('long', message);
+    //log.debug('long', message);
 
     if(this.currentTrend !== 'up') {
       this.currentTrend = 'up';
@@ -45,7 +45,7 @@ method.check = function(candle) {
       this.advice();
 
   } else if(price >= settings.short) {
-    log.debug('short', message);
+    //log.debug('short', message);
 
     if(this.currentTrend !== 'down') {
       this.currentTrend = 'down';
