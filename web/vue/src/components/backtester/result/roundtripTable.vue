@@ -7,6 +7,9 @@
           th Entry at
           th Exit at
           th Exposure
+          th Entry asset
+          th Entry price
+          th Exit price
           th Entry balance
           th Exit balance
           th P&amp;L
@@ -15,6 +18,9 @@
           td {{ fmt(rt.entryAt) }}
           td {{ fmt(rt.exitAt) }}
           td {{ diff(rt.duration) }}
+          td {{ round(rt.entryAsset) }}
+          td {{ round(rt.entryPrice) }}
+          td {{ round(rt.exitPrice) }}
           td {{ round(rt.entryBalance) }}
           td {{ round(rt.exitBalance) }}
           td {{ round(rt.pnl) }}
