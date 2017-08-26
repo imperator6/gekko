@@ -208,16 +208,18 @@ Trader.getCapabilities = function () {
     name: 'Bitfinex',
     slug: 'bitfinex',
     currencies: ['USD', 'BTC'],
-    assets: ['BTC', 'LTC', 'ETH'],
+    assets: ['BTC', 'LTC', 'ETH', 'IOT'],
     markets: [
         { pair: ['USD', 'BTC'], minimalOrder: { amount: 0.01, unit: 'asset' } },
         { pair: ['USD', 'LTC'], minimalOrder: { amount: 0.01, unit: 'asset' } },
         { pair: ['USD', 'ETH'], minimalOrder: { amount: 0.01, unit: 'asset' } },
         { pair: ['BTC', 'LTC'], minimalOrder: { amount: 0.01, unit: 'asset' } },
         { pair: ['BTC', 'ETH'], minimalOrder: { amount: 0.01, unit: 'asset' } },
+        { pair: ['USD', 'IOT'], minimalOrder: { amount: 0.01, unit: 'asset' } },
     ],
     requires: ['key', 'secret'],
-    tid: 'tid'
+    tid: 'tid',
+    tradable: true
   };
 }
 
