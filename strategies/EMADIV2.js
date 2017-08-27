@@ -4,7 +4,7 @@ var log = require('../core/log.js');
 
 // configuration
 var config = require('../core/util.js').getConfig();
-var settings = config.EMADIV;
+var settings = config.EMADIV2;
 
 // let's create our own method
 var method = {};
