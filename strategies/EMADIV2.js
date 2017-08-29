@@ -85,7 +85,7 @@ method.check = function(candle) {
   } else if(diff >= settings.short) {
     log.debug('we are currently in a uptrend', message);
 
-    if(this.currentTrend !== 'short') {
+    if(this.trend.type !== 'short') {
       // set trend to long
       this.trend = {
         type: 'short',
