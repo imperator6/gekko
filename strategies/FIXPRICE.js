@@ -17,10 +17,8 @@ method.init = function() {
   this.requiredHistory = 0; 
 
   if (settings.exit === undefined) {
-     settings.exit = -2;     
+     settings.exit = -1;     
   } 
-
-  console.log(settings.exit);
 
   log.debug('New FIXPRICE', settings);
 }
