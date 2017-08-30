@@ -177,6 +177,17 @@ Manager.prototype.trade = function(what, retry) {
       if(amount < 0) amount = 0;
       price = this.ticker.ask;
       this.sell(amount, price);
+    } else if(what === 'EXIT') {
+      
+      // exit
+      price *= 1e8;
+      price = Math.ceil(price);
+      price /= 1e8;
+
+      amount = this.getBalance(this.asset);
+      if(amount < 0) amount = 0;
+      price = this.ticker.ask;
+      this.sell(amount, price);
     }
   };
   async.series([

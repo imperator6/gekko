@@ -16,6 +16,12 @@ method.init = function() {
   this.currentTrend;
   this.requiredHistory = 0; 
 
+  if (settings.exit === undefined) {
+     settings.exit = -2;     
+  } 
+
+  console.log(settings.exit);
+
   log.debug('New FIXPRICE', settings);
 }
 
@@ -33,9 +39,11 @@ method.log = function() {
 method.check = function(candle) { 
   var price = candle.close;
 
-  var message = '@ ' + price.toFixed(5) + ' (long:' + settings.long.toFixed(5) + ' short: '+ settings.short.toFixed(5) +')';
-
-  if(price <= settings.long) {
+  var message = '@' + price.toFixed(5) + ' (long:' + settings.long.toFixed(5) + ' short: '+ settings.short.toFixed(5) +')';
+  if(price <= settings.exit) {
+     
+      this.advice('exit');
+  } else if(price <= settings.long) {
     //log.debug('long', message);
 
     if(this.currentTrend !== 'up') {
