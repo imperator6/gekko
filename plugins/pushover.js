@@ -14,18 +14,19 @@ var Pushover = function() {
   this.p;
   this.price = 'N/A';
 
-  var exchangeMeta = checker.settings(config.watch);
-  this.exchangeSlug = exchangeMeta.slug;
+  if(_.isObject(config.trader)) {
+      var exchangeMeta = checker.settings(config.watch);
+      this.exchangeSlug = exchangeMeta.slug;
 
-  // create an exchange
-  var Exchange = require(dirs.exchanges + this.exchangeSlug);
-  this.exchange = new Exchange(config.watch);
+      // create an exchange
+      var Exchange = require(dirs.exchanges + this.exchangeSlug);
+      this.exchange = new Exchange(_.extend(config.trader, config.watch));
+  }
 
   this.setup();
 }
 
 Pushover.prototype.setup = function() {
-
 
   var setupPushover = function() {
     this.p = new push( {
@@ -58,6 +59,7 @@ Pushover.prototype.setup = function() {
   var setPortfolio = function(err, fullPortfolio) {
     if(err)
       util.die(err);
+      
       this.currencyItem = _.find(fullPortfolio, (p) => { return p.name === config.watch.currency});
 
       if(!this.currencyItem) {
@@ -73,8 +75,12 @@ Pushover.prototype.setup = function() {
     setupPushover.call(this);
 
   }.bind(this);
-  
-  util.retry(this.exchange.getPortfolio, setPortfolio);
+
+  if(_.isObject(this.exchange)) {
+    util.retry(this.exchange.getPortfolio, setPortfolio);
+  } else {
+    setPortfolio(null, []);
+  }
 }
 
 Pushover.prototype.send = function(subject, content) {
