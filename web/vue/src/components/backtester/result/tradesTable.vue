@@ -13,7 +13,7 @@
         tr(v-for='rt in trades')
           td {{ fmt(rt.date) }}
           td {{ rt.action }}
-          td {{ round(rt.price) }}
+          td {{ rt.price }}
           td {{ rt.portfolio.asset }}
           td {{ rt.portfolio.currency }}
           td {{ rt.portfolio.balance }}
