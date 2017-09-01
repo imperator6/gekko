@@ -7,6 +7,8 @@
     .hr.contain
     chart(:data='result', height='500')
     .hr.contain
+    tradesTable(:trades='result.trades')
+    .hr.contain
     roundtripTable(:roundtrips='result.roundtrips')
 </template>
 
@@ -14,6 +16,7 @@
 import resultSummary from './summary.vue'
 import chart from './chartWrapper.vue'
 import roundtripTable from './roundtripTable.vue'
+import tradesTable from './tradesTable.vue'
 
 export default {
   props: ['result'],
@@ -23,6 +26,7 @@ export default {
   methods: {},
   components: {
     roundtripTable,
+    tradesTable,
     resultSummary,
     chart
   }
