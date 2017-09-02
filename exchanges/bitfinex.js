@@ -217,6 +217,7 @@ Trader.getCapabilities = function () {
         { pair: ['BTC', 'ETH'], minimalOrder: { amount: 0.01, unit: 'asset' } },
         { pair: ['USD', 'IOT'], minimalOrder: { amount: 0.01, unit: 'asset' } },
         { pair: ['USD', 'OMG'], minimalOrder: { amount: 0.01, unit: 'asset' } },
+        { pair: ['BTC', 'OMG'], minimalOrder: { amount: 0.01, unit: 'asset' } },
     ],
     requires: ['key', 'secret'],
     tid: 'tid',
