@@ -52,34 +52,65 @@ Trader.prototype.getPortfolio = function(callback) {
       util.die(e);
     }
 
+    if(_.isObject(data)) {
+      // We are only interested in funds in the "exchange" wallet
+      data = data.filter(c => c.type === 'exchange');
+
+      const asset = _.find(data, c => c.currency.toUpperCase() === this.asset);
+      const currency = _.find(data, c => c.currency.toUpperCase() === this.currency);
+
+      let assetAmount, currencyAmount;
+
+      if(_.isObject(asset) && _.isNumber(+asset.available) && !_.isNaN(+asset.available))
+        assetAmount = +asset.available;
+      else {
+        log.error(`Bitfinex did not provide ${this.asset} amount, assuming 0`);
+        assetAmount = 0;
+      }
+
+      if(_.isObject(currency) && _.isNumber(+currency.available) && !_.isNaN(+currency.available))
+        currencyAmount = +currency.available;
+      else {
+        log.error(`Bitfinex did not provide ${this.currency} amount, assuming 0`);
+        currencyAmount = 0;
+      }
+
+      const portfolio = [
+        { name: this.asset, amount: assetAmount },
+        { name: this.currency, amount: currencyAmount },
+      ];
+
+      callback(err, portfolio);
+    } else {
+      log.error('Error on loading portfolio. data is undefined!' , 'data', data, 'err',err, 'body', body);
+
+      const portfolio = [
+        { name: this.asset, amount: 0.0 },
+        { name: this.currency, amount: 0.0 },
+      ];
+
+      callback(err, portfolio);
+    }
+  }.bind(this));
+}
+
+Trader.prototype.getFullPortfolio = function(callback) {
+  this.bitfinex.wallet_balances(function (err, data, body) {
+
+    if(err && err.message === '401') {
+      let e = 'Bitfinex replied with an unauthorized error. ';
+      e += 'Double check whether your API key is correct.';
+      util.die(e);
+    }
+
     // We are only interested in funds in the "exchange" wallet
-    data = data.filter(c => c.type === 'exchange');
+    //data = data.filter(c => c.type === 'exchange');
 
-    const asset = _.find(data, c => c.currency.toUpperCase() === this.asset);
-    const currency = _.find(data, c => c.currency.toUpperCase() === this.currency);
+    data =_.map(data, (b) => {
+      return { name: b.currency.toUpperCase(), amount: b.available }
+    });
 
-    let assetAmount, currencyAmount;
-
-    if(_.isObject(asset) && _.isNumber(+asset.available) && !_.isNaN(+asset.available))
-      assetAmount = +asset.available;
-    else {
-      log.error(`Bitfinex did not provide ${this.asset} amount, assuming 0`);
-      assetAmount = 0;
-    }
-
-    if(_.isObject(currency) && _.isNumber(+currency.available) && !_.isNaN(+currency.available))
-      currencyAmount = +currency.available;
-    else {
-      log.error(`Bitfinex did not provide ${this.currency} amount, assuming 0`);
-      currencyAmount = 0;
-    }
-
-    const portfolio = [
-      { name: this.asset, amount: assetAmount },
-      { name: this.currency, amount: currencyAmount },
-    ];
-
-    callback(err, portfolio);
+    callback(err, data);
   }.bind(this));
 }
 
