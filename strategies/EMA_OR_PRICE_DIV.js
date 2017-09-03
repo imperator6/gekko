@@ -85,7 +85,7 @@ method.check = function(candle) {
       this.longPrice = price;
       this.advice('long');
     } else {
-      //log.debug('we are currently in uptrend', message);
+      log.debug('EMA_OR_PRICE_DIFF values:', message);
       this.advice();
     }
 
@@ -98,12 +98,12 @@ method.check = function(candle) {
       this.shortPrice = price;
       this.advice('short');
     } else {
-      //log.debug('we are currently in a downtrend', message);
+      log.debug('EMA_OR_PRICE_DIFF values:', message);
       this.advice();
     }
 
   } else {
-    //log.debug('we are currently not in an up or down trend', message);
+    log.debug('EMA_OR_PRICE_DIFF values:', message);
     this.advice();
   }
 }
