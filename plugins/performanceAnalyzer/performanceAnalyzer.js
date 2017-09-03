@@ -73,8 +73,7 @@ PerformanceAnalyzer.prototype.processTrade = function(trade) {
 }
 
 PerformanceAnalyzer.prototype.logRoundtripPart = function(trade) {
-  console.log(trade);
-  
+
   // this is not part of a valid roundtrip
   if(this.trades === 1 && trade.action === 'sell') {
     return;

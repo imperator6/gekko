@@ -100,7 +100,6 @@ Pushover.prototype.send = function(subject, content) {
           throw err;
       }
 
-      console.log( result );
   });
 
 }
