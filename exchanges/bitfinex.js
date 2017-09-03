@@ -46,6 +46,8 @@ Trader.prototype.retry = function(method, args) {
 Trader.prototype.getPortfolio = function(callback) {
   this.bitfinex.wallet_balances(function (err, data, body) {
 
+    log.debug('getPortfolio result', 'err:', err, 'data:', data, 'body:', body);
+
     if(err && err.message === '401') {
       let e = 'Bitfinex replied with an unauthorized error. ';
       e += 'Double check whether your API key is correct.';
@@ -82,14 +84,14 @@ Trader.prototype.getPortfolio = function(callback) {
 
       callback(err, portfolio);
     } else {
-      log.error('Error on loading portfolio. data is undefined!' , 'data', data, 'err',err, 'body', body);
+      log.error('Error on loading portfolio. data is undefined!' , 'data', data, 'err', err, 'body', body);
 
       const portfolio = [
         { name: this.asset, amount: 0.0 },
         { name: this.currency, amount: 0.0 },
       ];
 
-      callback(err, portfolio);
+      callback(null, portfolio);
     }
   }.bind(this));
 }
@@ -139,22 +141,29 @@ Trader.prototype.getFee = function(callback) {
 Trader.prototype.submit_order = function(type, amount, price, callback) {
   var args = _.toArray(arguments);
 
+  log.debug('submit order', 'type:', type, 'amount:', amount, 'price:', price);
+
   amount = Math.floor(amount*100000000)/100000000;
+
+  var cb =  function (err, data, body) {
+    if (err) {
+      log.error('unable to ' + type, err, body);
+      return this.retry(this.submit_order, args);
+    }
+
+    log.debug('order result', 'err:', err, 'data:', data, 'body:', body);
+
+    callback(err, data.order_id);
+  }.bind(this);
+
   this.bitfinex.new_order(
     this.pair,
     amount + '',
     price + '',
     this.name.toLowerCase(),
     type,
-    'exchange limit',
-    function (err, data, body) {
-      if (err) {
-        log.error('unable to ' + type, err, body);
-        return this.retry(this.submit_order, args);
-      }
-
-      callback(err, data.order_id);
-    });
+    'exchange limit', cb
+   );
 }
 
 Trader.prototype.buy = function(amount, price, callback) {
