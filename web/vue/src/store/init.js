@@ -6,6 +6,7 @@ import syncWatchers from './modules/watchers/sync'
 import syncStratrunners from './modules/stratrunners/sync'
 import syncNotifications from './modules/notifications/sync'
 import syncConfig from './modules/config/sync'
+import syncPortfolio from './modules/portfolio/sync'
 
 export default function() {
   syncImports();
@@ -13,4 +14,5 @@ export default function() {
   syncStratrunners();
   syncNotifications();
   syncConfig();
+  syncPortfolio();
 }

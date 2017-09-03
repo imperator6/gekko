@@ -131,6 +131,29 @@ Trader.prototype.getPortfolio = function(callback) {
   this.bittrexApi.getbalances(set);
 }
 
+Trader.prototype.getFullPortfolio = function(callback) {
+  var args = _.toArray(arguments);
+  log.debug('getPortfolio', 'called');
+
+  var set = function(data, err) {
+    if(err) {
+      log.error('getPortfolio', 'Error', err);
+      return this.retry(this.getPortfolio, args);
+    }
+
+
+    data = data.result;
+
+    data =_.map(data, (b) => {
+      return { name: b.Currency, amount: b.Available }
+    });
+
+    callback(err, data);
+  }.bind(this);
+
+  this.bittrexApi.getbalances(set);
+}
+
 Trader.prototype.getTicker = function(callback) {
   var args = _.toArray(arguments);
 

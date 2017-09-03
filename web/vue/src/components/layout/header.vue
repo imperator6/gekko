@@ -7,6 +7,7 @@
     nav.bg--light-gray
       .menu.contain
         router-link(to='/home').py1 Home
+        router-link(to='/portfolio').py1 Portfolio
         router-link(to='/live-gekkos').py1 Live Gekkos
         router-link(to='/backtest').py1 Backtest
         router-link(to='/data').py1 Local data
