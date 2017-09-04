@@ -24,7 +24,7 @@ var Trader = function(config) {
 // waiting 10 seconds
 Trader.prototype.retry = function(method, args) {
   var wait = +moment.duration(10, 'seconds');
-  log.debug(this.name, 'returned an error, retrying..');
+  log.debug(this.name, 'returned an error, retrying..', 'method:', method, 'args:', args );
 
   var self = this;
 
