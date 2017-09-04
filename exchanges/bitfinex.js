@@ -148,7 +148,8 @@ Trader.prototype.submit_order = function(type, amount, price, callback) {
   var cb =  function (err, data, body) {
     if (err) {
       log.error('unable to ' + type, err, body);
-      return this.retry(this.submit_order, args);
+      //return this.retry(this.submit_order, args);
+      return callback(err, 'dummyOrderId');
     }
 
     log.debug('order result', 'err:', err, 'data:', data, 'body:', body);
