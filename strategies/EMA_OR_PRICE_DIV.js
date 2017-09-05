@@ -19,6 +19,8 @@ method.init = function() {
   this.longPrice = -1;
   this.shortPrice = -1;
 
+  this.price = -1;
+
   // define the indicators we need
   this.addIndicator('ema', 'EMA', settings.ema);
 }
@@ -37,10 +39,38 @@ method.log = function() {
   log.debug('\t EMA age:', ema.age, 'candles');
 }
 
+method.adviceWrapper = function(arg) {
+
+  if(this.longPrice > -1 && 'short' === arg) {
+
+    this.advice(arg);
+
+  } else if (this.shortPrice > -1 && 'long' === arg) {
+
+        var goodLongPrice = this.shortPrice  - (this.shortPrice* 0.025);
+
+        if(this.price < goodLongPrice ) { // TODO less than x percent
+          this.advice('long');
+        } else {
+          log.info('LOSS protection!!!! Current Price ' + this.price + ' is higher than short price of ' + this.shortPrice )
+          this.currentTrend = 'down'
+          this.advice();
+        }
+  } else {
+    this.advice(arg);
+  }
+
+};
+
+
+
+
 method.check = function(candle) {
   var ema = this.indicators.ema;
   var avgPrice = ema.result;
   var price = candle.close;
+
+  this.price = price;
 
   // 1. check the current price for quick money
   if(this.currentTrend === 'up' && this.longPrice > -1) {
@@ -52,7 +82,8 @@ method.check = function(candle) {
         log.debug('QuickMoney: going short! ', message);
         this.currentTrend = 'down';
         this.shortPrice = price;
-        this.advice('short');
+        //this.longPrice = -1;
+        this.adviceWrapper('short');
         return;
     }
 
@@ -65,7 +96,8 @@ method.check = function(candle) {
           log.debug('QuickMoney: going long! ', message);
           this.currentTrend = 'up';
           this.longPrice = price;
-          this.advice('long');
+        //  this.shortPrice = -1;
+          this.adviceWrapper('long');
           return;
       }
   }
@@ -83,10 +115,11 @@ method.check = function(candle) {
       log.debug('New Advice LONG!', message);
       this.currentTrend = 'up';
       this.longPrice = price;
-      this.advice('long');
+      //this.shortPrice = -1;
+      this.adviceWrapper('long');
     } else {
       log.debug('EMA_OR_PRICE_DIFF values:', message);
-      this.advice();
+      this.adviceWrapper();
     }
 
 
@@ -96,15 +129,16 @@ method.check = function(candle) {
       log.debug('New Advice SHORT!', message);
       this.currentTrend = 'down';
       this.shortPrice = price;
-      this.advice('short');
+      //this.longPrice = -1;
+      this.adviceWrapper('short');
     } else {
       log.debug('EMA_OR_PRICE_DIFF values:', message);
-      this.advice();
+      this.adviceWrapper();
     }
 
   } else {
     log.debug('EMA_OR_PRICE_DIFF values:', message);
-    this.advice();
+    this.adviceWrapper();
   }
 }
 
