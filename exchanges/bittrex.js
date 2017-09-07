@@ -144,7 +144,7 @@ Trader.prototype.getFullPortfolio = function(callback) {
 
     data = data.result;
 
-    data =_.map(data, (b) => {
+    data =_.map(data, function (b) {
       return { name: b.Currency, amount: b.Available }
     });
 

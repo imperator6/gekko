@@ -1,0 +1,9 @@
+[emadiv]
+ema = 50
+long = -3
+short = 3
+
+[stop]
+long = 10
+short = -10
+

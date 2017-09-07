@@ -69,7 +69,11 @@ var Indicators = {
   CCI: {
     factory: require(indicatorsPath + 'CCI'),
     input: 'candle'
-  }
+  },
+  EMADIV: {
+    factory: require(indicatorsPath + 'EMADIV'),
+    input: 'candle'
+  },
 };
 
 var allowedIndicators = _.keys(Indicators);
