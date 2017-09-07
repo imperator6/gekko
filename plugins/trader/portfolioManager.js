@@ -27,7 +27,7 @@ var Manager = function(conf) {
     util.die(error);
 
   this.exchangeMeta = checker.settings(conf);
-  this.exchangeSlug = exchangeMeta.slug;
+  this.exchangeSlug = this.exchangeMeta.slug;
 
   // create an exchange
   var Exchange = require(dirs.exchanges + this.exchangeMeta.slug);
@@ -128,7 +128,7 @@ Manager.prototype.setTicker = function(callback) {
 
     if(err)
       util.die(err);
-    
+
     if(_.isFunction(callback))
       callback();
   }.bind(this);
@@ -178,7 +178,7 @@ Manager.prototype.trade = function(what, retry) {
       price = this.ticker.ask;
       this.sell(amount, price);
     } else if(what === 'EXIT') {
-      
+
       // exit
       price *= 1e8;
       price = Math.ceil(price);
