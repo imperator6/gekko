@@ -49,6 +49,14 @@ Trader.prototype.processAdvice = function(advice) {
       'Selling ', config.trader.asset
     );
     this.manager.trade('SELL');
+  } else if (advice.recommendation == 'exit') {
+    log.info(
+      'Trader',
+      'Received advice to exit the market.',
+      'Exiting ', config.trader.asset
+    );
+    
+    this.manager.trade('EXIT');
   }
 }
 

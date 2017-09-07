@@ -7,6 +7,7 @@ import * as watchMutations from './modules/watchers/mutations'
 import * as stratrunnerMutations from './modules/stratrunners/mutations'
 import * as notificationMutations from './modules/notifications/mutations'
 import * as configMutations from './modules/config/mutations'
+import * as portfolioMutations from './modules/portfolio/mutations'
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ _.merge(mutations, watchMutations);
 _.merge(mutations, stratrunnerMutations);
 _.merge(mutations, notificationMutations);
 _.merge(mutations, configMutations);
+_.merge(mutations, portfolioMutations);
 
 export default new Vuex.Store({
   state: {
@@ -33,7 +35,8 @@ export default new Vuex.Store({
       reconnected: false
     },
     apiKeys: [],
-    exchanges: {}
+    exchanges: {},
+    portfolioList: []
   },
   mutations,
   strict: debug

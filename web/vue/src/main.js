@@ -13,6 +13,7 @@ import data from './components/data/data.vue'
 import importer from './components/data/import/importer.vue'
 import singleImport from './components/data/import/single.vue'
 import config from './components/config/config.vue'
+import portfolio from './components/portfolio/portfolio.vue'
 
 import gekkoList from './components/gekko/list.vue'
 import newGekko from './components/gekko/new.vue'
@@ -26,6 +27,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', redirect: '/home' },
     { path: '/home', component: home },
+    { path: '/portfolio', component: portfolio },
     { path: '/backtest', component: backtester },
     { path: '/config', component: config },
     { path: '/data', component: data },

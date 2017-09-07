@@ -15,7 +15,7 @@ const CONFIG = {
     port: 3000,
     path: '/'
   },
-  adapter: 'sqlite'
+  adapter: 'mongodb'
 }
 
 if(typeof window === 'undefined')

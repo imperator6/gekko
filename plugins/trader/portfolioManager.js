@@ -27,6 +27,7 @@ var Manager = function(conf) {
     util.die(error);
 
   this.exchangeMeta = checker.settings(conf);
+  this.exchangeSlug = exchangeMeta.slug;
 
   // create an exchange
   var Exchange = require(dirs.exchanges + this.exchangeMeta.slug);
@@ -173,6 +174,17 @@ Manager.prototype.trade = function(what, retry) {
       price /= 1e8;
 
       amount = this.getBalance(this.asset) - this.keepAsset;
+      if(amount < 0) amount = 0;
+      price = this.ticker.ask;
+      this.sell(amount, price);
+    } else if(what === 'EXIT') {
+      
+      // exit
+      price *= 1e8;
+      price = Math.ceil(price);
+      price /= 1e8;
+
+      amount = this.getBalance(this.asset);
       if(amount < 0) amount = 0;
       price = this.ticker.ask;
       this.sell(amount, price);

@@ -52,6 +52,7 @@ const listWraper = require(ROUTE('list'));
 router.get('/api/imports', listWraper('imports'));
 router.get('/api/gekkos', listWraper('gekkos'));
 router.get('/api/exchanges', require(ROUTE('exchanges')));
+router.get('/api/portfolios', require(ROUTE('portfolios')));
 
 router.post('/api/addApiKey', apiKeys.add);
 router.post('/api/removeApiKey', apiKeys.remove);
@@ -62,6 +63,7 @@ router.post('/api/import', require(ROUTE('import')));
 router.post('/api/startGekko', require(ROUTE('startGekko')));
 router.post('/api/killGekko', require(ROUTE('killGekko')));
 router.post('/api/getCandles', require(ROUTE('getCandles')));
+
 
 
 // incoming WS:

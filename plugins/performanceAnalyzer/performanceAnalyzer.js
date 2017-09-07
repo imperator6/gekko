@@ -73,6 +73,7 @@ PerformanceAnalyzer.prototype.processTrade = function(trade) {
 }
 
 PerformanceAnalyzer.prototype.logRoundtripPart = function(trade) {
+
   // this is not part of a valid roundtrip
   if(this.trades === 1 && trade.action === 'sell') {
     return;
@@ -82,6 +83,7 @@ PerformanceAnalyzer.prototype.logRoundtripPart = function(trade) {
     this.roundTrip.entry = {
       date: trade.date,
       price: this.price,
+      asset: this.current.asset,
       total: this.current.asset * this.price,
     }
   } else if(trade.action === 'sell') {
@@ -103,6 +105,7 @@ PerformanceAnalyzer.prototype.handleRoundtrip = function() {
   const roundtrip = {
     entryAt: this.roundTrip.entry.date,
     entryPrice: this.roundTrip.entry.price,
+    entryAsset: this.roundTrip.entry.asset,
     entryBalance: this.roundTrip.entry.total,
 
     exitAt: this.roundTrip.exit.date,
