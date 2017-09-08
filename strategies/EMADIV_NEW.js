@@ -52,16 +52,9 @@ method.check = function(candle) {
       }
   }
 
-  if(this.waitForEmaDivShort && emadivResult !== 'short') {
-    this.advice();
-    return;
-  } else {
-    this.waitForEmaDivShort = false;
-  }
-
   // raise detection for long
   if(this.lastAction === 'short') {
-    var diffToCurrent = (candle.close / this.longPrice*100)-100;
+    var diffToCurrent = (candle.close / this.shortPrice*100)-100;
     if(diffToCurrent >= settings.stop.long) { // 10% up trend
       log.debug('raise detection for long current close:',  candle.close, 'longPrice was:', this.longPrice, 'diff', diffToCurrent, candle.start.format('YYYY-MM-DD HH:mm:ss'));
       this.lastAction = 'long';
@@ -69,6 +62,13 @@ method.check = function(candle) {
       this.advice('long');
       return;
     }
+  }
+
+  if(this.waitForEmaDivShort && emadivResult !== 'short') {
+    this.advice();
+    return;
+  } else {
+    this.waitForEmaDivShort = false;
   }
 
   if(this.waitForEmaDivLong && emadivResult !== 'long') {
