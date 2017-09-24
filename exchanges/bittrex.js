@@ -4,6 +4,7 @@ var _ = require('lodash');
 var moment = require('moment');
 var log = require('../core/log');
 var apiKeyManager = require('../web/apiKeyManager.js');
+var async = require('async');
 
 // Helper methods
 function joinCurrencies(currencyA, currencyB){
@@ -135,12 +136,66 @@ Trader.prototype.getFullPortfolio = function(callback) {
   var args = _.toArray(arguments);
   log.debug('getPortfolio', 'called');
 
+
+  var setTickRates = function(err, data) {
+
+    var setFunc = function(item, next) {
+
+
+      var cb = function(data, err) {
+
+        var lastTick = data.result.Last
+          // add tickRate to item
+         item.tickRate = lastTick;
+
+         if('USDT' === item.name) {
+           item.BTC = item.amount / lastTick;
+           item.BTC_PRICE = lastTick;
+         } else {
+           item.BTC = item.amount * lastTick;
+           item.BTC_PRICE = 1/lastTick;
+         }
+
+         next(false, item);
+      }
+
+      if('BTC' === item.name) {
+        cb({result: {Last: 1}});
+      } else if ('USDT' === item.name) {
+        //cb({result: {Last: 1}});
+        this.bittrexApi.getticker({market: 'USDT-BTC'}, cb );
+      } else {
+        this.bittrexApi.getticker({market: 'BTC-' + item.name}, cb );
+      }
+
+    }.bind(this);
+
+
+    // get
+    this.bittrexApi.getticker({market: 'USDT-BTC'}, function (usdtTickData, err) {
+
+      async.map(data, setFunc, function(err, result) {
+
+        result = _.collect(result, function(it) {
+          it.USD = it.BTC * usdtTickData.result.Last;
+          it.price =  it.USD / it.amount;
+          return it;
+        });
+
+        console.log(result);
+
+        callback(err, result);
+      }.bind(this));
+
+    }.bind(this));
+
+  }.bind(this);
+
   var set = function(data, err) {
     if(err) {
       log.error('getPortfolio', 'Error', err);
       return this.retry(this.getPortfolio, args);
     }
-
 
     data = data.result;
 
@@ -148,7 +203,7 @@ Trader.prototype.getFullPortfolio = function(callback) {
       return { name: b.Currency, amount: b.Available }
     });
 
-    callback(err, data);
+    setTickRates(err, data);
   }.bind(this);
 
   this.bittrexApi.getbalances(set);

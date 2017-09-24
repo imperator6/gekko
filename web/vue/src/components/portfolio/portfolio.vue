@@ -7,12 +7,16 @@ div.contain.portfolio
     tr
       th Currency
       th Amount
+      th price
+      th Usd
       th Exchange
     tr(v-for='p in portfolioList')
       td {{ p.currency }}
       td {{ p.amount }}
+      td {{ p.price }}
+      td {{ p.usd }}
       td {{ p.name }}
-  
+
 </template>
 
 <script>

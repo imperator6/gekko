@@ -5,6 +5,8 @@ const promisify = require('promisify-node');
 const gekkoRoot = __dirname + '/../../';
 const apiKeyManager = require('../apiKeyManager.js');
 
+const async = require('async');
+
 
 module.exports = function *() {
 
@@ -12,9 +14,7 @@ module.exports = function *() {
 
     var exchangeNames = apiKeyManager.get();
 
-    var result = []
-
-    _.each(exchangeNames, (name) => {
+    var setFunc = function (name, next) {
 
       var keys = apiKeyManager._getApiKeyPair(name);
       var config = {};
@@ -26,16 +26,20 @@ module.exports = function *() {
       var exchange = new Exchange(config);
 
       var cb = function(err, data) {
-        result.push({name: name, values: data });
-
-        if(result.length == exchangeNames.length) {
-          this.body = result;
-            resolve();
-        }
+        return next(false, {name: name, values: data });
       }.bind(this);
 
-      exchange.getFullPortfolio(cb);
-    });
+      if(typeof exchange.getFullPortfolio === "function") {
+        exchange.getFullPortfolio(cb);
+      } else {
+        cb(null, {});
+      }
+    }
+
+    async.map(exchangeNames, setFunc , function (err, results) {
+      this.body = results;
+      resolve();
+    }.bind(this));
 
   }.bind(this);
 
