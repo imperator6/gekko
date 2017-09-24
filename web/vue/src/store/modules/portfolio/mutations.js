@@ -9,12 +9,16 @@ export const syncPortfolioList = (state, portfolioList) => {
 
   _.each(portfolioList, (p) => {
     _.each(p.values, (v) => {
-      newList.push( {name: p.name, currency: v.name, amount: v.amount , usd: v.USD, price: v.price} );
-      total += v.USD;
+      newList.push( {name: p.name, currency: v.name, amount: v.amount , usd: _.round(v.USD, 2), price: _.round(v.price, 2)} );
+      if(_.isNumber(v.USD)) {
+        total += v.USD;
+      }
     });
   });
 
-  newList.push( {name: 'all', currency: 'x_TOTAL_USD', amount: total , usd: total} );
+  total = _.round(total, 2);
+
+  newList.push( {name: 'all', currency: 'x_TOTAL_USD', amount: 1 , usd: total} );
 
   function compare(a, b) {
     if (a.currency < b.currency)
