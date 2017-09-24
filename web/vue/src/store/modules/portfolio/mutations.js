@@ -9,9 +9,14 @@ export const syncPortfolioList = (state, portfolioList) => {
 
   _.each(portfolioList, (p) => {
     _.each(p.values, (v) => {
-      newList.push( {name: p.name, currency: v.name, amount: v.amount , usd: _.round(v.USD, 2), price: _.round(v.price, 2)} );
-      if(_.isNumber(v.USD)) {
-        total += v.USD;
+      if(v.amount > 0.001) {
+        var usd = _.isNumber(v.USD) ? v.USD : 0;
+        var price = _.isNumber(v.price) ? v.price : 0;
+        
+        newList.push( {name: p.name, currency: v.name, amount: v.amount , usd: _.round(usd, 2), price: _.round(price, 2)} );
+        if(_.isNumber(v.USD)) {
+          total += v.USD;
+        }
       }
     });
   });
